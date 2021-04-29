@@ -271,9 +271,11 @@ public class FirstPersonAIO : MonoBehaviour {
     }
 
     private void Start(){
+
+        gameObject.tag = "Player";
         #region Look Settings - Start
 
-        if(autoCrosshair || drawStaminaMeter){
+        if (autoCrosshair || drawStaminaMeter){
             Canvas canvas = new GameObject("AutoCrosshair").AddComponent<Canvas>();
             canvas.gameObject.AddComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
