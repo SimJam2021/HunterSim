@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 23320235798237312}
   - component: {fileID: 136367590879483440}
   m_Layer: 0
-  m_Name: Birch_tree2
+  m_Name: Birch_tree2 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,7 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1216688828669844}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -60,8 +60,8 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7ed001e11f025264c8b5dfc5b0702319, type: 2}
-  - {fileID: 2100000, guid: ffc6ec73fb923634287e7dd921c9292d, type: 2}
+  - {fileID: 2100000, guid: 6693b750f7d3a7c49a7ec907062adc18, type: 2}
+  - {fileID: 2100000, guid: f049439b755afc247a402d5306fe62ff, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
