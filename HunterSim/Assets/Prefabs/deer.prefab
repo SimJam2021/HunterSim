@@ -100,7 +100,13 @@ MonoBehaviour:
   newGrazeDistMax: 25
   runAwayDist: 100
   heardBufferCounterParm: 15
-  height: 0.5
+  height: 0.35
+  heightPadding: 0.05
+  ground:
+    serializedVersion: 2
+    m_Bits: 64
+  maxGroundAngle: 120
+  debug: 0
   playerMaxSpeed: 0.064
 --- !u!1 &8882242815124890152
 GameObject:

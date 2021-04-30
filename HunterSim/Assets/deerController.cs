@@ -41,11 +41,18 @@ public class deerController : MonoBehaviour
     public float heardBufferCounterParm = 15;
     private float heardBufferCounter;
     private bool heardBuffer = false;
-    private Vector3 forward;
+
+    //Moving on terain
+    public float height = 0.5f;
+    public float heightPadding = 0.05f;
+    public LayerMask ground;
+    public float maxGroundAngle = 40;
+    public bool debug;
     private float groundAngle;
+    private Vector3 forward;
     private RaycastHit hitInfo;
     private bool grounded;
-    public float height = 0.5f;
+    
 
     // Deer States
     private bool deerGrazing;
@@ -94,11 +101,41 @@ public class deerController : MonoBehaviour
         playerSpeed = (playerPosition - lastPosition).magnitude;
         lastPosition = playerPosition;
 
-        transform.position += transform.forward * Time.deltaTime * runningSpeed;
-
-        // check grounded
-        if (Physics.Raycast(transform.position, -Vector3.up, out hitInfo, height))
+        if (groundAngle >= maxGroundAngle)
         {
+            transform.Rotate(0, Random.Range(150, 210), 0);
+        }
+
+        // Control Angle of Deer on Terrain
+
+        //CalculateForward
+        if (!grounded)
+        {
+            forward = transform.forward;
+        }
+        else
+        {
+            forward = Vector3.Cross(transform.right, hitInfo.normal);
+        }
+
+        //Calculate Ground Angle
+        if (!grounded)
+        {
+            groundAngle = 90;
+        }
+        else
+        {
+            groundAngle = Vector3.Angle(hitInfo.normal, transform.forward);
+        }
+
+        //Check Ground
+
+        if (Physics.Raycast(transform.position,-Vector3.up,out hitInfo,height + heightPadding,ground))
+        {
+            if (Vector3.Distance(transform.position,hitInfo.point) < height)
+            {
+                transform.position = Vector3.Lerp(transform.position, transform.position + Vector3.up * height, 5 * Time.deltaTime);
+            }
             grounded = true;
         }
         else
@@ -106,31 +143,17 @@ public class deerController : MonoBehaviour
             grounded = false;
         }
 
-        // Check if angle too much and deer need to rotate
-
-        groundAngle = Vector3.Angle(hitInfo.normal, transform.forward);
-
-        // Apply Gravity
-        if (!grounded)
+        //Apply Gravity
+        if(!grounded)
         {
             transform.position += Physics.gravity * Time.deltaTime;
         }
 
-        if (!grounded)
-        {
-            leftRightRandVar = Random.Range(1, 3);
-            if (leftRightRandVar == 1)
-            {
-                transform.Rotate(0, Random.Range(45, 135), 0);
-            }
-            else
-            {
-                transform.Rotate(0, Random.Range(225, 315), 0);
-            }
-        }
-
-        Debug.Log("Ground Angle : " + groundAngle);
         Debug.Log("Grounded : " + grounded);
+        Debug.Log("Ground angle : " + groundAngle);
+
+
+
 
 
         // Graze Behaviour
@@ -367,4 +390,7 @@ public class deerController : MonoBehaviour
         }
 
     }
+
+
+
 }
