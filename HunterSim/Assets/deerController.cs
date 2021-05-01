@@ -48,11 +48,13 @@ public class deerController : MonoBehaviour
     public LayerMask ground;
     public float maxGroundAngle = 40;
     public bool debug;
-    private float groundAngle;
-    private Vector3 forward;
-    private RaycastHit hitInfo;
-    private bool grounded;
-    
+    float groundAngle;
+    Vector3 forward;
+    RaycastHit hitInfo;
+    bool grounded;
+    private Vector3 deerLastPosition;
+    private Vector3 deerLastGroundedPosition;
+
 
     // Deer States
     private bool deerGrazing;
@@ -75,6 +77,8 @@ public class deerController : MonoBehaviour
     private double randSeenVar;
     private double randHeardVar;
 
+    private int countTrigger;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -83,6 +87,7 @@ public class deerController : MonoBehaviour
         moveToNewGrazeTimer = Random.Range(5.0f, 10.0f);
         Debug.Log("Deer is currently grazing");
         Debug.Log("New graze timer : " + moveToNewGrazeTimer);
+        countTrigger = 0;
     }
 
     // Update is called once per frame
@@ -103,12 +108,12 @@ public class deerController : MonoBehaviour
 
         if (groundAngle >= maxGroundAngle)
         {
+            Debug.Log("Angle Too Accute - Changing course");
             transform.Rotate(0, Random.Range(150, 210), 0);
         }
 
         // Control Angle of Deer on Terrain
-
-        //CalculateForward
+        // CalculateForward
         if (!grounded)
         {
             forward = transform.forward;
@@ -128,19 +133,25 @@ public class deerController : MonoBehaviour
             groundAngle = Vector3.Angle(hitInfo.normal, transform.forward);
         }
 
-        //Check Ground
+        Debug.Log("Ground Angle : " + groundAngle);
 
+        //Check Ground
         if (Physics.Raycast(transform.position,-Vector3.up,out hitInfo,height + heightPadding,ground))
         {
             if (Vector3.Distance(transform.position,hitInfo.point) < height)
             {
-                transform.position = Vector3.Lerp(transform.position, transform.position + Vector3.up * height, 5 * Time.deltaTime);
+                countTrigger += 1;
+                Debug.Log("Fall through scenery" + countTrigger);
+                transform.position = Vector3.Lerp(transform.position, transform.position + Vector3.up * 1, Time.deltaTime);
+                //transform.position = new Vector3(deerLastGroundedPosition.x, deerLastGroundedPosition.y += 0.1f, deerLastGroundedPosition.z += 0.1f);
+                //deerLastGroundedPosition = deerLastPosition;
             }
             grounded = true;
         }
         else
         {
             grounded = false;
+            deerLastGroundedPosition = deerLastPosition;
         }
 
         //Apply Gravity
@@ -149,15 +160,12 @@ public class deerController : MonoBehaviour
             transform.position += Physics.gravity * Time.deltaTime;
         }
 
-        Debug.Log("Grounded : " + grounded);
-        Debug.Log("Ground angle : " + groundAngle);
-
-
+        // Last poition
+        deerLastPosition = transform.position;
 
 
 
         // Graze Behaviour
-
         if (deerGrazing)
         {
             moveToNewGrazeTimer -= 1 * Time.deltaTime;
@@ -186,7 +194,6 @@ public class deerController : MonoBehaviour
         }
 
         // seen behaviour
-
         if (playerSeen)
         {
             transform.LookAt(playerPosition);
@@ -204,7 +211,6 @@ public class deerController : MonoBehaviour
         }
 
         // Heard behavious
-
         if(playerHeard)
         {
             transform.LookAt(playerPosition);
@@ -379,7 +385,7 @@ public class deerController : MonoBehaviour
             }
         }
 
-        // Head Buffer Count Down
+        // Heard Buffer Count Down
         if (heardBuffer)
         {
             heardBufferCounter -= 1 * Time.deltaTime;
@@ -390,7 +396,5 @@ public class deerController : MonoBehaviour
         }
 
     }
-
-
 
 }
